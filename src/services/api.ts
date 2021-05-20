@@ -4,7 +4,7 @@ const httpClient = axios.create({
     baseURL: "http://localhost:8081"
 })
 
-export default class ApiService {
+class ApiService {
     apiUrl: string;
 
     constructor(apiUrl: string) {
@@ -27,3 +27,5 @@ export default class ApiService {
         return httpClient.delete(`${this.apiUrl}${url}`);
     }
 }
+
+export default ApiService

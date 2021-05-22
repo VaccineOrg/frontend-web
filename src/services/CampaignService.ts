@@ -16,8 +16,8 @@ type Campaigns = {
 }
 
 class CampaignService extends ApiService {
-    constructor() {
-        super("/v1/vaccination");
+    constructor(userProfile?: string) {
+        super("/v1/vaccination", userProfile);
     }
 
     getAllCampaignsByUser(name: string): Promise<AxiosResponse<Campaigns>> {

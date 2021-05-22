@@ -5,6 +5,8 @@ import Header from '../components/Header'
 
 import theme from '../styles/theme'
 
+import 'react-toastify/dist/ReactToastify.css';
+
 function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider resetCSS theme={theme}>

@@ -5,10 +5,12 @@ const httpClient = axios.create({
 })
 
 class ApiService {
-  apiUrl: string;
+  private apiUrl: string;
 
-  constructor(apiUrl: string) {
+  constructor(apiUrl: string, userProfile: string = "") {
     this.apiUrl = apiUrl;
+
+    httpClient.defaults.headers.common['user-profile'] = userProfile;
   }
 
   get(url: string) {

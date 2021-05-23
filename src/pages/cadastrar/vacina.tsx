@@ -56,8 +56,6 @@ interface VacinaProps {
 
 type VaccineData = Omit<Vaccine, "id" | "ableToDelete">
 
-const service = new VaccineService("10")
-
 function Vacina({ vaccines }: VacinaProps) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef(null)
@@ -69,6 +67,8 @@ function Vacina({ vaccines }: VacinaProps) {
     description: yup.string(),
     name: yup.string().required("Nome da vacina é obrigatório"),
   })
+
+  const service = new VaccineService("10")
 
   const {
     handleSubmit,
@@ -252,6 +252,8 @@ function Vacina({ vaccines }: VacinaProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (_context) => {
+  const service = new VaccineService("10")
+
   const { data } = await service.getAllVaccines()
 
   return { props: { vaccines: data } }

@@ -1,6 +1,7 @@
 import React from "react"
-import { GetServerSideProps } from "next"
+
 import { MdChevronRight } from "react-icons/md"
+import { GetServerSideProps } from "next"
 import {
 	Flex,
 	Heading,
@@ -24,7 +25,7 @@ type Campaigns = {
 	vaccineName: string
 }
 
-type ConsultaProps = {
+interface ConsultaProps {
 	campaigns: Campaigns[]
 }
 
@@ -32,9 +33,9 @@ function Consulta({ campaigns }: ConsultaProps) {
 	return (
 		<Flex w="100%" maxW="1160" mx="auto" direction="column">
 			<Heading mt="12">Consultar Campanhas</Heading>
-			<Table variant="striped" mt={12}>
+			<Table mt={12}>
 				<Thead>
-					<Tr>
+					<Tr bg="lightgray">
 						<Th>Nome da Campanha</Th>
 						<Th>Nome da Vacina</Th>
 						<Th>Status</Th>
@@ -60,7 +61,7 @@ function Consulta({ campaigns }: ConsultaProps) {
 	)
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (_context) => {
 	const service = new CampaignService()
 
 	const { data } = await service.getAllCampaignsByUser("Luiz")

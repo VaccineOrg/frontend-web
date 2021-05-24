@@ -1,5 +1,11 @@
-const Index = () => (
-  <div></div>
-)
+import { Flex } from "@chakra-ui/layout"
 
-export default Index
+function Home() {
+  return (
+    <Flex>
+      <h1>Hello World</h1>
+    </Flex>
+  )
+}
+
+export default Home

@@ -1,14 +1,19 @@
+import { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 
-import theme from '../theme'
-import { AppProps } from 'next/app'
+import Header from '../components/Header'
 
-function MyApp({ Component, pageProps }: AppProps) {
+import theme from '../styles/theme'
+
+import 'react-toastify/dist/ReactToastify.css';
+
+function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider resetCSS theme={theme}>
+      <Header />
       <Component {...pageProps} />
     </ChakraProvider>
   )
 }
 
-export default MyApp
+export default App

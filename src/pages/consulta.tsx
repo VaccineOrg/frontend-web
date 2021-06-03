@@ -7,50 +7,67 @@ import {
 	Heading,
 	IconButton,
 	Table,
+	TableCaption,
 	Tbody,
 	Td,
 	Th,
 	Thead,
+	Tooltip,
 	Tr
 } from "@chakra-ui/react"
 
-import CampaignService from "../services/CampaignService"
+import { formatStatusToPortuguese } from "../utils/Format"
 
-type Campaigns = {
-	userId: number,
-	campaignId: number,
-	vaccineId: number,
-	status: string,
-	campaignName: string,
-	vaccineName: string
-}
+import UserCampaignService from "../services/UserCampaignService"
+
+import { UserCampaign } from "../types/UserCampaign"
 
 interface ConsultaProps {
-	campaigns: Campaigns[]
+	userCampaignList: UserCampaign[]
 }
 
-function Consulta({ campaigns }: ConsultaProps) {
+function Consulta({ userCampaignList }: ConsultaProps) {
 	return (
-		<Flex w="100%" maxW="1160" mx="auto" direction="column">
+		<Flex
+			w="100%"
+			maxW="1160"
+			mx="auto"
+			direction="column"
+		>
 			<Heading mt="12">Consultar Campanhas</Heading>
 			<Table mt={12}>
+				{
+					userCampaignList.length == 0 &&
+					<TableCaption>
+						Você ainda não aderiu a uma campanha
+					</TableCaption>
+				}
 				<Thead>
 					<Tr bg="lightgray">
 						<Th>Nome da Campanha</Th>
 						<Th>Nome da Vacina</Th>
-						<Th>Status</Th>
+						<Th>Estado</Th>
 						<Th></Th>
 					</Tr>
 				</Thead>
 				<Tbody>
 					{
-						campaigns.map((campaign, index) => (
+						userCampaignList.map((campaign, index) => (
 							<Tr key={index}>
 								<Td>{campaign.campaignName}</Td>
 								<Td>{campaign.vaccineName}</Td>
-								<Td>{campaign.status}</Td>
+								<Td>{formatStatusToPortuguese(campaign.status)}</Td>
 								<Td>
-									<IconButton variant="outline" aria-label="Search database" icon={<MdChevronRight />} />
+									<Tooltip
+										label="Mais informações"
+										aria-label="Clicando neste botão você verá as informações referentes a campanha que você se inscreveu"
+									>
+										<IconButton
+											variant="outline"
+											aria-label="Search database"
+											icon={<MdChevronRight />}
+										/>
+									</Tooltip>
 								</Td>
 							</Tr>
 						))
@@ -62,12 +79,15 @@ function Consulta({ campaigns }: ConsultaProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (_context) => {
-	const service = new CampaignService()
+	const service = new UserCampaignService()
 
-	const { data } = await service.getAllCampaignsByUser("Luiz")
+	let userCampaignList: UserCampaign[] = []
+
+	await service.getAllCampaignsByUser("Luiz")
+		.then(response => userCampaignList = response.data.userCampaigns)
 
 	return {
-		props: { campaigns: data.userCampaigns }
+		props: { userCampaignList }
 	}
 }
 

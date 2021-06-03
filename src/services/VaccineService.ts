@@ -2,36 +2,22 @@ import { AxiosResponse } from "axios";
 
 import ApiService from "./ApiService";
 
-type Vaccine = {
-    description: string,
-    name: string,
-}
-
-type VaccineModel = {
-    ableToDelete: boolean,
-    description: string,
-    id: number,
-    name: string,
-}
-
-type Vaccines = {
-    vaccines: VaccineModel[]
-}
+import { Vaccine, VaccineData } from "../types/Vaccine"
 
 class VaccineService extends ApiService {
     constructor(userProfile?: string) {
         super("/v1/vaccine", userProfile);
     }
 
-    getAllVaccines(): Promise<AxiosResponse<Vaccines>> {
+    getAllVaccines(): Promise<AxiosResponse<Vaccine[]>> {
         return this.get("/")
     }
 
-    createVaccine(vaccine: Vaccine): Promise<AxiosResponse<VaccineModel>> {
+    createVaccine(vaccine: VaccineData): Promise<AxiosResponse<Vaccine>> {
         return this.post("/", vaccine)
     }
 
-    updateVaccine(id: number, vaccine: Vaccine): Promise<AxiosResponse<VaccineModel>> {
+    updateVaccine(id: number, vaccine: VaccineData): Promise<AxiosResponse<Vaccine>> {
         return this.put(`/${id}`, vaccine)
     }
 

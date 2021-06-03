@@ -1,4 +1,4 @@
-import { ToastContainer, toast, ToastOptions } from 'react-toastify';
+import { ToastContainer, toast, ToastOptions } from 'react-toastify'
 
 const options: ToastOptions = {
   autoClose: 5000,
@@ -10,23 +10,24 @@ const options: ToastOptions = {
   progress: undefined,
 }
 
-export function showInfoMessage(message: string) {
+function showInfoMessage(message: string) {
   toast.info(message, options)
 }
 
-export function showSuccessMessage(message: string) {
+function showSuccessMessage(message: string) {
   toast.success(message, options)
 }
 
-export function showWarningMessage(message: string) {
+function showWarningMessage(message: string) {
   toast.warn(message, options)
 }
 
-export function showErrorMessage(message: string) {
+function showErrorMessage(message: string) {
   toast.error(message, options)
 }
 
-export const ToastComponent = () => (
+function ToastComponent() {
+  return (
     <ToastContainer
       position="top-right"
       autoClose={5000}
@@ -38,4 +39,13 @@ export const ToastComponent = () => (
       draggable
       pauseOnHover
     />
-)
+  )
+}
+
+export {
+  showInfoMessage,
+  showSuccessMessage,
+  showWarningMessage,
+  showErrorMessage,
+  ToastComponent
+}

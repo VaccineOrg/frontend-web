@@ -2,26 +2,31 @@ import { AxiosResponse } from "axios";
 
 import ApiService from "./ApiService";
 
-type Campaign = {
-	userId: number,
-	campaignId: number,
-	vaccineId: number,
-	status: string,
-	campaignName: string,
-	vaccineName: string
-}
-
-type Campaigns = {
-    userCampaigns: Campaign[]
-}
+import { Campaign } from "../types/Campaign"
 
 class CampaignService extends ApiService {
     constructor(userProfile?: string) {
-        super("/v1/vaccination", userProfile);
+        super("/v1/campaigns", userProfile);
     }
 
-    getAllCampaignsByUser(name: string): Promise<AxiosResponse<Campaigns>> {
-        return this.get(`/${name}/campaigns`)
+    getAllCampaigns(): Promise<AxiosResponse<Campaign[]>> {
+        return this.get("/")
+    }
+
+    createCampaign(campaign: Omit<Campaign, "id">): Promise<AxiosResponse<Campaign>> {
+        return this.post("/", campaign)
+    }
+
+    updateCampaign(id: number, campaign: Omit<Campaign, "id">): Promise<AxiosResponse<Campaign>> {
+        return this.put(`/${id}`, campaign)
+    }
+
+    updateCampaignStatus(id: number): Promise<AxiosResponse<Campaign>> {
+        return this.get(`/status/${id}`)
+    }
+
+    deleteCampaign(id: number) {
+        return this.delete(`/${id}`)
     }
 }
 

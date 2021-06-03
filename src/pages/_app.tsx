@@ -5,7 +5,9 @@ import Header from '../components/Header'
 
 import theme from '../styles/theme'
 
+import "react-datepicker/dist/react-datepicker.css";
 import 'react-toastify/dist/ReactToastify.css';
+import "../styles/global.css"
 
 function App({ Component, pageProps }: AppProps) {
   return (

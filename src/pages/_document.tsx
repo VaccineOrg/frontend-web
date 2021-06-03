@@ -4,7 +4,9 @@ class Document extends NextDocument {
   render() {
     return (
       <Html>
-        <Head />
+        <Head>
+          <meta name="description" content="Academic project for managing corporate vaccine campaigns." />
+        </Head>
         <body>
           <Main />
           <NextScript />

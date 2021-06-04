@@ -337,8 +337,8 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
               isMulti
               options={options}
               value={options.filter(option => {
-                watch("vaccineList")?.filter(
-                  vaccine => { option.value === vaccine.id }
+                return watch("vaccineList")?.filter(
+                  vaccine => { return option.value === vaccine.id }
                 ).length > 0
               })}
               onChange={handleVaccineList}

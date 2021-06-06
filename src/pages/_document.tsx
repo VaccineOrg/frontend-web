@@ -5,7 +5,12 @@ class Document extends NextDocument {
     return (
       <Html>
         <Head>
-          <meta name="description" content="Academic project for managing corporate vaccine campaigns." />
+          <title>Vaccine Organization</title>
+          <meta
+            name="description"
+            content="Academic project for managing corporate vaccine campaigns."
+          />
+          <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         </Head>
         <body>
           <Main />

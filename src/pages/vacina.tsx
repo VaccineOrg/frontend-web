@@ -37,11 +37,11 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 
-import { showErrorMessage, showSuccessMessage, ToastComponent } from "../../components/Toast"
+import { showErrorMessage, showSuccessMessage, ToastComponent } from "../components/Toast"
 
-import VaccineService from "../../services/VaccineService"
+import VaccineService from "../services/VaccineService"
 
-import { Vaccine, VaccineData } from "../../types/Vaccine"
+import { Vaccine, VaccineData } from "../types/Vaccine"
 
 interface VacinaProps {
   vaccineList: Vaccine[],

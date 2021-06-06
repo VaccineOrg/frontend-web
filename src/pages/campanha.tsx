@@ -47,15 +47,15 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 
-import { showErrorMessage, showSuccessMessage, ToastComponent } from "../../components/Toast"
+import { showErrorMessage, showSuccessMessage, ToastComponent } from "../components/Toast"
 
-import { formatToLocaleDateString, formatDateToString, formatStatusToPortuguese, formatStringToDate } from "../../utils/Format";
+import { formatToLocaleDateString, formatDateToString, formatStatusToPortuguese, formatStringToDate } from "../utils/Format";
 
-import CampaignService from "../../services/CampaignService"
-import VaccineService from "../../services/VaccineService"
+import CampaignService from "../services/CampaignService"
+import VaccineService from "../services/VaccineService"
 
-import { Campaign, CampaignData } from "../../types/Campaign"
-import { Vaccine } from "../../types/Vaccine"
+import { Campaign, CampaignData } from "../types/Campaign"
+import { Vaccine } from "../types/Vaccine"
 
 interface CampanhaProps {
   campaignList: Campaign[],
@@ -427,7 +427,7 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                 <Td>
                   {`${formatToLocaleDateString(campaign.dateBegin)} - ${formatToLocaleDateString(campaign.dateEnd)}`}
                 </Td>
-                <Td>{campaign.vaccineList[0].name}</Td>
+                <Td>{campaign.vaccineList[0]?.name}</Td>
                 <Td>{formatStatusToPortuguese(campaign.status)}</Td>
                 <Td>
                   <HStack spacing={2}>

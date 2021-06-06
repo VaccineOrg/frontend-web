@@ -9,8 +9,8 @@ class UserCampaignService extends ApiService {
         super("/v1/vaccination");
     }
 
-    getAllCampaignsByUser(name: string): Promise<AxiosResponse<UserCampaignList>> {
-        return this.get(`/${name}/campaigns`)
+    getAllCampaignsByUserId(id: number): Promise<AxiosResponse<UserCampaignList>> {
+        return this.get(`/${id}/campaigns`)
     }
 }
 

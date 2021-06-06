@@ -40,7 +40,7 @@ function Registro() {
     service.createUser(data)
       .then(() => {
         reset()
-        showSuccessMessage("Vacina criada com sucesso")
+        showSuccessMessage("Usuário registrado com sucesso")
       })
       .catch(err => showErrorMessage(err.response.data.description))
   }

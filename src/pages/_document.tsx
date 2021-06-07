@@ -5,7 +5,6 @@ class Document extends NextDocument {
     return (
       <Html>
         <Head>
-          <title>Vaccine Organization</title>
           <meta
             name="description"
             content="Academic project for managing corporate vaccine campaigns."

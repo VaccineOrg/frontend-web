@@ -1,5 +1,6 @@
 import React from "react"
 
+import Head from "next/head"
 import { MdChevronRight } from "react-icons/md"
 import { GetServerSideProps } from "next"
 import {
@@ -28,53 +29,58 @@ interface ConsultaProps {
 
 function Consulta({ userCampaignList }: ConsultaProps) {
 	return (
-		<Flex
-			w="100%"
-			maxW="1160"
-			mx="auto"
-			direction="column"
-		>
-			<Heading mt="12">Consultar Campanhas</Heading>
-			<Table mt={12}>
-				{
-					userCampaignList.length == 0 &&
-					<TableCaption>
-						Você ainda não aderiu a uma campanha
-					</TableCaption>
-				}
-				<Thead>
-					<Tr bg="lightgray">
-						<Th>Nome da Campanha</Th>
-						<Th>Nome da Vacina</Th>
-						<Th>Estado</Th>
-						<Th></Th>
-					</Tr>
-				</Thead>
-				<Tbody>
+		<>
+			<Head>
+				<title>Vaccine App - Consulta de Campanhas aderidas</title>
+			</Head>
+			<Flex
+				w="100%"
+				maxW="1160"
+				mx="auto"
+				direction="column"
+			>
+				<Heading mt="12">Consultar Campanhas</Heading>
+				<Table mt={12}>
 					{
-						userCampaignList.map((campaign, index) => (
-							<Tr key={index}>
-								<Td>{campaign.campaignName}</Td>
-								<Td>{campaign.vaccineName}</Td>
-								<Td>{formatStatusToPortuguese(campaign.status)}</Td>
-								<Td>
-									<Tooltip
-										label="Mais informações"
-										aria-label="Clicando neste botão você verá as informações referentes a campanha que você se inscreveu"
-									>
-										<IconButton
-											variant="outline"
-											aria-label="Search database"
-											icon={<MdChevronRight />}
-										/>
-									</Tooltip>
-								</Td>
-							</Tr>
-						))
+						userCampaignList.length == 0 &&
+						<TableCaption>
+							Você ainda não aderiu a uma campanha
+						</TableCaption>
 					}
-				</Tbody>
-			</Table>
-		</Flex>
+					<Thead>
+						<Tr bg="lightgray">
+							<Th>Nome da Campanha</Th>
+							<Th>Nome da Vacina</Th>
+							<Th>Estado</Th>
+							<Th></Th>
+						</Tr>
+					</Thead>
+					<Tbody>
+						{
+							userCampaignList.map((campaign, index) => (
+								<Tr key={index}>
+									<Td>{campaign.campaignName}</Td>
+									<Td>{campaign.vaccineName}</Td>
+									<Td>{formatStatusToPortuguese(campaign.status)}</Td>
+									<Td>
+										<Tooltip
+											label="Mais informações"
+											aria-label="Clicando neste botão você verá as informações referentes a campanha que você se inscreveu"
+										>
+											<IconButton
+												variant="outline"
+												aria-label="Search database"
+												icon={<MdChevronRight />}
+											/>
+										</Tooltip>
+									</Td>
+								</Tr>
+							))
+						}
+					</Tbody>
+				</Table>
+			</Flex>
+		</>
 	)
 }
 
@@ -83,7 +89,7 @@ export const getServerSideProps: GetServerSideProps = async (_context) => {
 
 	let userCampaignList: UserCampaign[] = []
 
-	await service.getAllCampaignsByUser("Luiz")
+	await service.getAllCampaignsByUserId(2)
 		.then(response => userCampaignList = response.data.userCampaigns)
 
 	return {

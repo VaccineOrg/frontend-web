@@ -9,6 +9,10 @@ class UserService extends ApiService {
         super("/v1/user");
     }
 
+    getUser(id: number): Promise<AxiosResponse<User>> {
+        return this.get(`/${id}`)
+    }
+
     createUser(user: UserData): Promise<AxiosResponse<User>> {
         return this.post("/register", user)
     }

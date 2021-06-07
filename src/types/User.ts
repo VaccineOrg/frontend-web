@@ -9,3 +9,5 @@ export type User = {
 export type UserData = Omit<User, "id" | "employeeId">
 
 export type UserLogin = Omit<User, "id" | "employeeId" | "userName">
+
+export type UserCache = Omit<User, "employeeId" | "password">

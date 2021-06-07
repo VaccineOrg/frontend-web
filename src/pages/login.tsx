@@ -1,8 +1,7 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 
 import * as yup from "yup"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import { Input } from "@chakra-ui/input"
 import { Tooltip } from "@chakra-ui/tooltip"
 import { Button } from "@chakra-ui/button"
@@ -11,18 +10,16 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { Box, Flex, Heading, Stack } from "@chakra-ui/layout"
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-control"
 
-import { showErrorMessage, ToastComponent } from "../components/Toast"
+import { AuthContext } from "../contexts/AuthContext"
 
-import AuthService from "../services/AuthService"
+import { ToastComponent } from "../components/Toast"
 
-import { UserData } from "../types/User"
+import { UserLogin } from "../types/User"
 
 function Login() {
-  const router = useRouter()
+  const { signIn } = useContext(AuthContext)
 
   const [loggingInUser, setLoggingInUser] = useState<boolean>(false)
-
-  const service = new AuthService()
 
   const schema = yup.object().shape({
     email: yup.string()
@@ -36,16 +33,14 @@ function Login() {
     formState: { errors },
     handleSubmit,
     register,
-  } = useForm<UserData>({
+  } = useForm<UserLogin>({
     resolver: yupResolver(schema)
   })
 
-  const onSubmit: SubmitHandler<UserData> = async data => {
+  const onSubmit: SubmitHandler<UserLogin> = async data => {
     setLoggingInUser(true)
 
-    await service.loginUser(data)
-      .then(() => router.replace('/consulta'))
-      .catch(err => showErrorMessage(err.response.data.description))
+    await signIn(data)
 
     setLoggingInUser(false)
   }

@@ -5,18 +5,21 @@ import Head from "next/head"
 import { Input } from "@chakra-ui/input"
 import { Tooltip } from "@chakra-ui/tooltip"
 import { Button } from "@chakra-ui/button"
+import { useRouter } from "next/router"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Box, Flex, Heading, Stack } from "@chakra-ui/layout"
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-control"
 
-import { showErrorMessage, showSuccessMessage, ToastComponent } from "../components/Toast"
+import { showErrorMessage, ToastComponent } from "../components/Toast"
 
 import UserService from "../services/UserService"
 
 import { UserData } from "../types/User"
 
 function Registro() {
+  const router = useRouter()
+
   const [savingUser, setSavingUser] = useState<boolean>(false)
 
   const service = new UserService()
@@ -44,10 +47,7 @@ function Registro() {
     setSavingUser(true)
 
     await service.createUser(data)
-      .then(() => {
-        reset()
-        showSuccessMessage("Usuário registrado com sucesso")
-      })
+      .then(() => router.replace('/login'))
       .catch(err => showErrorMessage(err.response.data.description))
 
     setSavingUser(false)

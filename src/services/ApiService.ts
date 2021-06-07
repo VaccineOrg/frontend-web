@@ -1,16 +1,22 @@
 import axios from "axios";
+import { parseCookies } from "nookies";
+
+const { "nextauth.token": token } = parseCookies()
 
 const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8081/"
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8081/",
+  headers: {
+    common: {
+      "user-profile": token?.split(".")[0] || ""
+    }
+  }
 })
 
 class ApiService {
   private apiUrl: string;
 
-  constructor(apiUrl: string, userProfile: string = "") {
+  constructor(apiUrl: string) {
     this.apiUrl = apiUrl;
-
-    httpClient.defaults.headers.common['user-profile'] = userProfile;
   }
 
   get(url: string) {
@@ -27,6 +33,10 @@ class ApiService {
 
   delete(url: string) {
     return httpClient.delete(`${this.apiUrl}${url}`);
+  }
+
+  setUserProfileHeader(userProfile: string) {
+    httpClient.defaults.headers.common["user-profile"] = userProfile;
   }
 }
 

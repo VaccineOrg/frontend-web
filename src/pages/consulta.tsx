@@ -1,6 +1,7 @@
 import React from "react"
 
 import Head from "next/head"
+import { parseCookies } from "nookies"
 import { MdChevronRight } from "react-icons/md"
 import { GetServerSideProps } from "next"
 import {
@@ -84,13 +85,29 @@ function Consulta({ userCampaignList }: ConsultaProps) {
 	)
 }
 
-export const getServerSideProps: GetServerSideProps = async (_context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	const { 'nextauth.token': token } = parseCookies(context)
+
+	if (!token) {
+		return {
+			redirect: {
+				destination: "/login",
+				permanent: false,
+			}
+		}
+	}
+
+	const [userProfile, id] = token.split(".")
+
 	const service = new UserCampaignService()
+
+	service.setUserProfileHeader(userProfile)
 
 	let userCampaignList: UserCampaign[] = []
 
-	await service.getAllCampaignsByUserId(2)
+	await service.getAllCampaignsByUserId(parseInt(id))
 		.then(response => userCampaignList = response.data.userCampaigns)
+		.catch(err => console.log("[Erro]: " + err))
 
 	return {
 		props: { userCampaignList }

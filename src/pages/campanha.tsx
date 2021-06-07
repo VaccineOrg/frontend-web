@@ -5,8 +5,8 @@ import Select from "react-select"
 import DatePicker, { registerLocale } from "react-datepicker";
 import Head from "next/head"
 import { ptBR } from "date-fns/locale";
-import { useRouter } from "next/dist/client/router"
 import { yupResolver } from '@hookform/resolvers/yup'
+import { parseCookies } from "nookies";
 import { GetServerSideProps } from "next"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { MdArrowForward, MdDelete, MdModeEdit } from "react-icons/md"
@@ -70,13 +70,21 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
 
   const cancelRef = useRef(null)
 
-  const router = useRouter()
-
   const [savingCampaign, setSavingCampaign] = useState<boolean>(false)
+  const [allVaccineList,] = useState<Vaccine[]>(vaccineList)
+  const [allCampaignList, setAllCampaignList] = useState<Campaign[]>(campaignList)
   const [campaignSelectedToEdit, setCampaignSelectedToEdit] = useState<Campaign | undefined>(undefined)
   const [campaignSelectedToDelete, setCampaignSelectedToDelete] = useState<Campaign | undefined>(undefined)
 
-  const service = new CampaignService("10")
+  const service = new CampaignService()
+
+  const { 'nextauth.token': token } = parseCookies()
+
+  if (token) {
+    const [userProfile,] = token.split(".")
+
+    service.setUserProfileHeader(userProfile)
+  }
 
   const schema = yup.object().shape({
     dateBegin: yup.date()
@@ -112,11 +120,15 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
     resolver: yupResolver(schema)
   })
 
-  const options = vaccineList.map(vaccine => {
+  const options = allVaccineList.map(vaccine => {
     return { value: vaccine.id, label: vaccine.name }
   })
 
-  const handleRefresh = async () => router.replace(router.asPath)
+  const handleRefresh = async () => {
+    await service.getAllCampaigns()
+      .then(response => setAllCampaignList(response.data))
+      .catch(err => showErrorMessage(err.response.data.description))
+  }
 
   const handleVaccineList = (selectedOptions: any) => {
     const vaccineListData: Vaccine[] = []
@@ -124,7 +136,7 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
     selectedOptions.forEach(
       (option: { value: number, label: string }) => {
         vaccineListData.push(
-          vaccineList.filter(vaccine => vaccine.id === option.value)[0]
+          allVaccineList.filter(vaccine => vaccine.id === option.value)[0]
         )
       }
     )
@@ -417,7 +429,7 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
         </Box>
         <Table mt={12}>
           {
-            campaignList.length == 0 &&
+            allCampaignList.length == 0 &&
             <TableCaption>Nenhuma campanha foi cadastrada</TableCaption>
           }
           <Thead>
@@ -431,7 +443,7 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
           </Thead>
           <Tbody>
             {
-              campaignList.map(campaign => (
+              allCampaignList.map(campaign => (
                 <Tr key={campaign.id}>
                   <Td>{campaign.name}</Td>
                   <Td>
@@ -519,18 +531,48 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (_context) => {
-  const campaignService = new CampaignService("10")
-  const vaccineService = new VaccineService("10")
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { 'nextauth.token': token } = parseCookies(context)
 
-  let campaignList: Campaign[] = []
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      }
+    }
+  }
+
+  const [userProfile,] = token.split(".")
+
+  if (userProfile !== "10") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      }
+    }
+  }
+
+  const vaccineService = new VaccineService()
+
+  vaccineService.setUserProfileHeader(userProfile)
+
   let vaccineList: Vaccine[] = []
-
-  await campaignService.getAllCampaigns()
-    .then(response => campaignList = response.data)
 
   await vaccineService.getAllVaccines()
     .then(response => vaccineList = response.data)
+    .catch(err => console.log("[Erro]: " + err))
+
+  const campaignService = new CampaignService()
+
+  campaignService.setUserProfileHeader(userProfile)
+
+  let campaignList: Campaign[] = []
+
+  await campaignService.getAllCampaigns()
+    .then(response => campaignList = response.data)
+    .catch(err => console.log("[Erro]: " + err))
 
   return {
     props: { campaignList, vaccineList }

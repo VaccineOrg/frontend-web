@@ -3,8 +3,8 @@ import React, { useRef, useState } from "react"
 import * as yup from "yup"
 import Head from "next/head"
 import { SubmitHandler, useForm } from "react-hook-form"
-import { useRouter } from "next/router"
 import { yupResolver } from '@hookform/resolvers/yup'
+import { parseCookies } from "nookies"
 import { GetServerSideProps } from "next"
 import { MdDelete, MdModeEdit } from "react-icons/md"
 import {
@@ -53,13 +53,20 @@ function Vacina({ vaccineList }: VacinaProps) {
 
   const cancelRef = useRef(null)
 
-  const router = useRouter()
-
   const [savingVaccine, setSavingVaccine] = useState<boolean>(false)
+  const [allVaccineList, setAllVaccineList] = useState<Vaccine[]>(vaccineList)
   const [vaccineSelectedToEdit, setVaccineSelectedToEdit] = useState<Vaccine | undefined>(undefined)
   const [vaccineSelectedToDelete, setVaccineSelectedToDelete] = useState<Vaccine | undefined>(undefined)
 
-  const service = new VaccineService("10")
+  const service = new VaccineService()
+
+  const { 'nextauth.token': token } = parseCookies()
+
+  if (token) {
+    const [userProfile,] = token.split(".")
+
+    service.setUserProfileHeader(userProfile)
+  }
 
   const schema = yup.object().shape({
     description: yup.string(),
@@ -77,7 +84,11 @@ function Vacina({ vaccineList }: VacinaProps) {
     resolver: yupResolver(schema)
   })
 
-  const handleRefresh = async () => router.replace(router.asPath)
+  const handleRefresh = async () => {
+    await service.getAllVaccines()
+      .then(response => setAllVaccineList(response.data))
+      .catch(err => showErrorMessage(err.response.data.description))
+  }
 
   const handleEdit = (vaccine: Vaccine) => {
     setValue("name", vaccine.name)
@@ -224,7 +235,7 @@ function Vacina({ vaccineList }: VacinaProps) {
         </Box>
         <Table mt={12}>
           {
-            vaccineList.length == 0 &&
+            allVaccineList.length == 0 &&
             <TableCaption>
               Nenhuma vacina foi cadastrada
             </TableCaption>
@@ -238,7 +249,7 @@ function Vacina({ vaccineList }: VacinaProps) {
           </Thead>
           <Tbody>
             {
-              vaccineList.map(vaccine => (
+              allVaccineList.map(vaccine => (
                 <Tr key={vaccine.id}>
                   <Td>{vaccine.name}</Td>
                   <Td>{vaccine.description}</Td>
@@ -300,13 +311,38 @@ function Vacina({ vaccineList }: VacinaProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (_context) => {
-  const service = new VaccineService("10")
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { 'nextauth.token': token } = parseCookies(context)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      }
+    }
+  }
+
+  const [userProfile,] = token.split(".")
+
+  if (userProfile !== "10") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      }
+    }
+  }
+
+  const service = new VaccineService()
+
+  service.setUserProfileHeader(userProfile)
 
   let vaccineList: Vaccine[] = []
 
   await service.getAllVaccines()
     .then(response => vaccineList = response.data)
+    .catch(err => console.log("[Erro]: " + err))
 
   return {
     props: { vaccineList }

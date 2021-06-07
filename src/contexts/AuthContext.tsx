@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
-import { setCookie, parseCookies } from "nookies";
+import { setCookie, parseCookies, destroyCookie } from "nookies";
 
 import { showErrorMessage } from "../components/Toast";
 
@@ -27,7 +27,10 @@ export function AuthProvider({ children }: any) {
     const { 'nextauth.token': token } = parseCookies()
 
     if (token) {
-      const [, id] = token.split(".")
+      const [userProfile, id] = token.split(".")
+
+      userService.setUserProfileHeader(userProfile)
+      authService.setUserProfileHeader(userProfile)
 
       userService.getUser(parseInt(id))
         .then(response => setUser(response.data))
@@ -36,8 +39,7 @@ export function AuthProvider({ children }: any) {
   }, [])
 
   async function signIn({ email, password }: UserLogin) {
-
-    await authService.loginUser({ email, password })
+    authService.loginUser({ email, password })
       .then(response => {
         const { email, employeeId, id, userName } = response.data
 
@@ -54,8 +56,16 @@ export function AuthProvider({ children }: any) {
       .catch(err => showErrorMessage(err.response.data.description))
   }
 
+  function signOut() {
+    destroyCookie(undefined, "nextauth.token")
+
+    setUser(null)
+
+    router.replace('/login')
+  }
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, signIn }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )

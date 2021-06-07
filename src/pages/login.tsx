@@ -15,6 +15,8 @@ import { AuthContext } from "../contexts/AuthContext"
 import { ToastComponent } from "../components/Toast"
 
 import { UserLogin } from "../types/User"
+import { GetServerSideProps } from "next"
+import { parseCookies } from "nookies"
 
 function Login() {
   const { signIn } = useContext(AuthContext)
@@ -109,6 +111,23 @@ function Login() {
       </Flex>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	const { 'nextauth.token': token } = parseCookies(context)
+
+	if (token) {
+		return {
+			redirect: {
+				destination: "/consulta",
+				permanent: false,
+			}
+		}
+	}
+
+  return {
+    props: {}
+  }
 }
 
 export default Login

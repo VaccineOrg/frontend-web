@@ -441,7 +441,7 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                   <Td>
                     {`${formatToLocaleDateString(campaign.dateBegin)} - ${formatToLocaleDateString(campaign.dateEnd)}`}
                   </Td>
-                  <Td>{campaign.vaccineList[0]?.name}</Td>
+                  <Td>{campaign.vaccineList?.map(vaccine => vaccine.name).join(" | ")}</Td>
                   <Td>{formatStatusToPortuguese(campaign.status)}</Td>
                   <Td>
                     <HStack spacing={2}>

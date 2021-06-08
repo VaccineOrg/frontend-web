@@ -97,11 +97,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		}
 	}
 
-	const [userProfile, id] = token.split(".")
+	const [, id] = token.split(".")
 
-	const service = new UserCampaignService()
-
-	service.setUserProfileHeader(userProfile)
+	const service = new UserCampaignService(context)
 
 	let userCampaignList: UserCampaign[] = []
 

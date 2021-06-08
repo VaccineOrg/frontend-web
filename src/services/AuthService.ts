@@ -5,8 +5,8 @@ import ApiService from "./ApiService";
 import { User, UserLogin } from "../types/User";
 
 class AuthService extends ApiService {
-    constructor() {
-        super("/v1/user");
+    constructor(context?: any) {
+        super("/v1/user", context);
     }
 
     loginUser(user: UserLogin): Promise<AxiosResponse<User>> {

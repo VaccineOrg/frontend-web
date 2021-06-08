@@ -1,42 +1,39 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { parseCookies } from "nookies";
 
-const { "nextauth.token": token } = parseCookies()
-
 const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8081/",
-  headers: {
-    common: {
-      "user-profile": token?.split(".")[0] || ""
-    }
-  }
+  baseURL: "http://localhost:8081/"
 })
 
 class ApiService {
-  private apiUrl: string;
+  private apiUrl: string
+  private httpClient: AxiosInstance
 
-  constructor(apiUrl: string) {
+  constructor(apiUrl: string, context?: any) {
     this.apiUrl = apiUrl;
+    this.httpClient = httpClient
+
+    const { "nextauth.token": token } = parseCookies(context)
+
+    if (token) {
+      this.httpClient.defaults.headers.common["user-profile"] = token.split(".")[0]
+    }
   }
 
   get(url: string) {
-    return httpClient.get(`${this.apiUrl}${url}`);
+    return this.httpClient.get(`${this.apiUrl}${url}`);
   }
 
   post(url: string, object: object) {
-    return httpClient.post(`${this.apiUrl}${url}`, object);
+    return this.httpClient.post(`${this.apiUrl}${url}`, object);
   }
 
   put(url: string, object: object) {
-    return httpClient.put(`${this.apiUrl}${url}`, object);
+    return this.httpClient.put(`${this.apiUrl}${url}`, object);
   }
 
   delete(url: string) {
-    return httpClient.delete(`${this.apiUrl}${url}`);
-  }
-
-  setUserProfileHeader(userProfile: string) {
-    httpClient.defaults.headers.common["user-profile"] = userProfile;
+    return this.httpClient.delete(`${this.apiUrl}${url}`);
   }
 }
 

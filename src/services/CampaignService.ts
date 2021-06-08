@@ -5,8 +5,8 @@ import ApiService from "./ApiService";
 import { Campaign } from "../types/Campaign"
 
 class CampaignService extends ApiService {
-    constructor() {
-        super("/v1/campaigns");
+    constructor(context?: any) {
+        super("/v1/campaigns", context);
     }
 
     getAllCampaigns(): Promise<AxiosResponse<Campaign[]>> {

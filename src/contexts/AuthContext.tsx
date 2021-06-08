@@ -18,28 +18,32 @@ export function AuthProvider({ children }: any) {
 
   const [user, setUser] = useState<UserCache | null>(null)
 
-  const authService = new AuthService()
-  const userService = new UserService()
-
   const isAuthenticated = !!user
+
+  let isAdmin = false
+  
+  const { 'nextauth.token': token } = parseCookies()
+
+  if (token) {
+    let [userProfile,] = token.split(".")
+
+    isAdmin = userProfile === "10"
+  }
 
   useEffect(() => {
     const { 'nextauth.token': token } = parseCookies()
 
     if (token) {
-      const [userProfile, id] = token.split(".")
+      const [, id] = token.split(".")
 
-      userService.setUserProfileHeader(userProfile)
-      authService.setUserProfileHeader(userProfile)
-
-      userService.getUser(parseInt(id))
+      new UserService().getUser(parseInt(id))
         .then(response => setUser(response.data))
         .catch(err => showErrorMessage(err.response.data.description))
     }
   }, [])
 
   async function signIn({ email, password }: UserLogin) {
-    authService.loginUser({ email, password })
+    new AuthService().loginUser({ email, password })
       .then(response => {
         const { email, employeeId, id, userName } = response.data
 
@@ -61,11 +65,11 @@ export function AuthProvider({ children }: any) {
 
     setUser(null)
 
-    router.replace('/login')
+    router.replace('/')
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, signIn, signOut }}>
+    <AuthContext.Provider value={{ isAdmin, isAuthenticated, user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )

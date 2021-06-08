@@ -78,14 +78,6 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
 
   const service = new CampaignService()
 
-  const { 'nextauth.token': token } = parseCookies()
-
-  if (token) {
-    const [userProfile,] = token.split(".")
-
-    service.setUserProfileHeader(userProfile)
-  }
-
   const schema = yup.object().shape({
     dateBegin: yup.date()
       .typeError("Data inválida")
@@ -554,9 +546,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 
-  const vaccineService = new VaccineService()
-
-  vaccineService.setUserProfileHeader(userProfile)
+  const vaccineService = new VaccineService(context)
 
   let vaccineList: Vaccine[] = []
 
@@ -564,9 +554,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     .then(response => vaccineList = response.data)
     .catch(err => console.log("[Erro]: " + err))
 
-  const campaignService = new CampaignService()
-
-  campaignService.setUserProfileHeader(userProfile)
+  const campaignService = new CampaignService(context)
 
   let campaignList: Campaign[] = []
 

@@ -5,8 +5,8 @@ import ApiService from "./ApiService";
 import { User, UserData } from "../types/User";
 
 class UserService extends ApiService {
-    constructor() {
-        super("/v1/user");
+    constructor(context?: any) {
+        super("/v1/user", context);
     }
 
     getUser(id: number): Promise<AxiosResponse<User>> {

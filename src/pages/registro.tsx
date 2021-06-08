@@ -7,6 +7,8 @@ import { Tooltip } from "@chakra-ui/tooltip"
 import { Button } from "@chakra-ui/button"
 import { useRouter } from "next/router"
 import { yupResolver } from "@hookform/resolvers/yup"
+import { parseCookies } from "nookies"
+import { GetServerSideProps } from "next"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Box, Flex, Heading, Stack } from "@chakra-ui/layout"
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-control"
@@ -21,8 +23,6 @@ function Registro() {
   const router = useRouter()
 
   const [savingUser, setSavingUser] = useState<boolean>(false)
-
-  const service = new UserService()
 
   const schema = yup.object().shape({
     email: yup.string()
@@ -46,7 +46,7 @@ function Registro() {
   const onSubmit: SubmitHandler<UserData> = async data => {
     setSavingUser(true)
 
-    await service.createUser(data)
+    await new UserService().createUser(data)
       .then(() => router.replace('/login'))
       .catch(err => showErrorMessage(err.response.data.description))
 
@@ -141,6 +141,23 @@ function Registro() {
       </Flex>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	const { 'nextauth.token': token } = parseCookies(context)
+
+	if (token) {
+		return {
+			redirect: {
+				destination: "/consulta",
+				permanent: false,
+			}
+		}
+	}
+
+  return {
+    props: {}
+  }
 }
 
 export default Registro

@@ -5,8 +5,8 @@ import ApiService from "./ApiService";
 import { Vaccine, VaccineData } from "../types/Vaccine"
 
 class VaccineService extends ApiService {
-    constructor() {
-        super("/v1/vaccine");
+    constructor(context?: any) {
+        super("/v1/vaccine", context);
     }
 
     getAllVaccines(): Promise<AxiosResponse<Vaccine[]>> {

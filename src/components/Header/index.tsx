@@ -18,7 +18,7 @@ import {
 import { AuthContext } from "../../contexts/AuthContext"
 
 function Header() {
-  const { isAuthenticated, signOut } = useContext(AuthContext)
+  const { isAdmin, isAuthenticated, signOut } = useContext(AuthContext)
 
   return (
     <Flex w="100%" maxW="1440" mx="auto" direction="column" bg="lightgray">
@@ -51,12 +51,17 @@ function Header() {
               <NextLink href="/consulta">
                 <Link style={{ textDecoration: "none" }}>Consulta</Link>
               </NextLink>
-              <NextLink href="/vacina">
-                <Link style={{ textDecoration: "none" }}>Vacina</Link>
-              </NextLink>
-              <NextLink href="/campanha">
-                <Link style={{ textDecoration: "none" }}>Campanha</Link>
-              </NextLink>
+              {
+                isAdmin &&
+                <>
+                  <NextLink href="/vacina">
+                    <Link style={{ textDecoration: "none" }}>Vacina</Link>
+                  </NextLink>
+                  <NextLink href="/campanha">
+                    <Link style={{ textDecoration: "none" }}>Campanha</Link>
+                  </NextLink>
+                </>
+              }
             </HStack>
           </Flex>
           <Box w="100%" bg="white"></Box>

@@ -60,14 +60,6 @@ function Vacina({ vaccineList }: VacinaProps) {
 
   const service = new VaccineService()
 
-  const { 'nextauth.token': token } = parseCookies()
-
-  if (token) {
-    const [userProfile,] = token.split(".")
-
-    service.setUserProfileHeader(userProfile)
-  }
-
   const schema = yup.object().shape({
     description: yup.string(),
     name: yup.string()
@@ -334,9 +326,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 
-  const service = new VaccineService()
-
-  service.setUserProfileHeader(userProfile)
+  const service = new VaccineService(context)
 
   let vaccineList: Vaccine[] = []
 

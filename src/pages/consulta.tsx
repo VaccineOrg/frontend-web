@@ -97,7 +97,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		}
 	}
 
-	const [, id] = token.split(".")
+	const [userProfile, id] = token.split(".")
+
+  if (userProfile !== "20") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      }
+    }
+  }
 
 	const service = new UserCampaignService(context)
 

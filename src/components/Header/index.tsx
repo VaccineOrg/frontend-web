@@ -48,19 +48,24 @@ function Header() {
             </NextLink>
             <Spacer />
             <HStack spacing="6" bg="white" pl={4}>
-              <NextLink href="/consulta">
-                <Link style={{ textDecoration: "none" }}>Consulta</Link>
-              </NextLink>
               {
-                isAdmin &&
-                <>
-                  <NextLink href="/vacina">
-                    <Link style={{ textDecoration: "none" }}>Vacina</Link>
-                  </NextLink>
-                  <NextLink href="/campanha">
-                    <Link style={{ textDecoration: "none" }}>Campanha</Link>
-                  </NextLink>
-                </>
+                isAdmin ?
+                  <>
+                    <NextLink href="/vacina">
+                      <Link style={{ textDecoration: "none" }}>Vacina</Link>
+                    </NextLink>
+                    <NextLink href="/campanha">
+                      <Link style={{ textDecoration: "none" }}>Campanha</Link>
+                    </NextLink>
+                  </> :
+                  <>
+                    <NextLink href="/consulta">
+                      <Link style={{ textDecoration: "none" }}>Consulta</Link>
+                    </NextLink>
+                    <NextLink href="/adesao">
+                      <Link style={{ textDecoration: "none" }}>Adesão</Link>
+                    </NextLink>
+                  </>
               }
             </HStack>
           </Flex>

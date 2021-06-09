@@ -20,6 +20,8 @@ import {
 
 import { formatStatusToPortuguese } from "../utils/Format"
 
+import { ToastComponent } from "../components/Toast"
+
 import UserCampaignService from "../services/UserCampaignService"
 
 import { UserCampaign } from "../types/UserCampaign"
@@ -80,6 +82,7 @@ function Consulta({ userCampaignList }: ConsultaProps) {
 						}
 					</Tbody>
 				</Table>
+				<ToastComponent />
 			</Flex>
 		</>
 	)
@@ -99,14 +102,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 	const [userProfile, id] = token.split(".")
 
-  if (userProfile !== "20") {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      }
-    }
-  }
+	if (userProfile !== "20") {
+		return {
+			redirect: {
+				destination: "/",
+				permanent: false,
+			}
+		}
+	}
 
 	const service = new UserCampaignService(context)
 

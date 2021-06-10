@@ -1,6 +1,7 @@
 import { Vaccine } from "./Vaccine"
 
 export type Campaign = {
+  adhered: number,
   dateBegin: string,
   dateEnd: string,
   id: number,

@@ -5,19 +5,23 @@ import ApiService from "./ApiService";
 import { Campaign } from "../types/Campaign"
 
 class CampaignService extends ApiService {
-    constructor(userProfile?: string) {
-        super("/v1/campaigns", userProfile);
+    constructor(context?: any) {
+        super("/v1/campaigns", context);
     }
 
     getAllCampaigns(): Promise<AxiosResponse<Campaign[]>> {
         return this.get("/")
     }
 
-    createCampaign(campaign: Omit<Campaign, "id">): Promise<AxiosResponse<Campaign>> {
+    getCampaignById(id: number): Promise<AxiosResponse<Campaign>> {
+        return this.get(`/${id}`)
+    }
+
+    createCampaign(campaign: Omit<Campaign, "id" | "adhered">): Promise<AxiosResponse<Campaign>> {
         return this.post("/", campaign)
     }
 
-    updateCampaign(id: number, campaign: Omit<Campaign, "id">): Promise<AxiosResponse<Campaign>> {
+    updateCampaign(id: number, campaign: Omit<Campaign, "id" | "adhered">): Promise<AxiosResponse<Campaign>> {
         return this.put(`/${id}`, campaign)
     }
 

@@ -2,19 +2,16 @@ import React from "react"
 
 import Head from "next/head"
 import { parseCookies } from "nookies"
-import { MdChevronRight } from "react-icons/md"
 import { GetServerSideProps } from "next"
 import {
 	Flex,
 	Heading,
-	IconButton,
 	Table,
 	TableCaption,
 	Tbody,
 	Td,
 	Th,
 	Thead,
-	Tooltip,
 	Tr
 } from "@chakra-ui/react"
 

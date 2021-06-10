@@ -55,7 +55,6 @@ function Consulta({ userCampaignList }: ConsultaProps) {
 							<Th>Nome da Campanha</Th>
 							<Th>Nome da Vacina</Th>
 							<Th>Estado</Th>
-							<Th></Th>
 						</Tr>
 					</Thead>
 					<Tbody>
@@ -65,18 +64,6 @@ function Consulta({ userCampaignList }: ConsultaProps) {
 									<Td>{campaign.campaignName}</Td>
 									<Td>{campaign.vaccineName}</Td>
 									<Td>{formatStatusToPortuguese(campaign.status)}</Td>
-									<Td>
-										<Tooltip
-											label="Mais informações"
-											aria-label="Clicando neste botão você verá as informações referentes a campanha que você se inscreveu"
-										>
-											<IconButton
-												variant="outline"
-												aria-label="Search database"
-												icon={<MdChevronRight />}
-											/>
-										</Tooltip>
-									</Td>
 								</Tr>
 							))
 						}

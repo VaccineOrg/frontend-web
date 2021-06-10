@@ -13,11 +13,15 @@ class CampaignService extends ApiService {
         return this.get("/")
     }
 
-    createCampaign(campaign: Omit<Campaign, "id">): Promise<AxiosResponse<Campaign>> {
+    getCampaignById(id: number): Promise<AxiosResponse<Campaign>> {
+        return this.get(`/${id}`)
+    }
+
+    createCampaign(campaign: Omit<Campaign, "id" | "adhered">): Promise<AxiosResponse<Campaign>> {
         return this.post("/", campaign)
     }
 
-    updateCampaign(id: number, campaign: Omit<Campaign, "id">): Promise<AxiosResponse<Campaign>> {
+    updateCampaign(id: number, campaign: Omit<Campaign, "id" | "adhered">): Promise<AxiosResponse<Campaign>> {
         return this.put(`/${id}`, campaign)
     }
 

@@ -113,7 +113,9 @@ function Adesao({ campaignList }: AdesaoProps) {
               <Heading mt="12">Adesão a Campanha</Heading>
               <Table mt={12}>
                 {
-                  allCampaignList.length == 0 &&
+                  allCampaignList
+                    .filter(campaign => campaign.status === "ACCESSION")
+                    .length == 0 &&
                   <TableCaption>Nenhuma campanha para aderir</TableCaption>
                 }
                 <Thead>

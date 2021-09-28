@@ -1,29 +1,29 @@
-import { useState } from "react"
+import {useState} from "react"
 
 import Head from "next/head"
-import { Tooltip } from "@chakra-ui/tooltip"
-import { useRouter } from "next/router"
-import { IconButton } from "@chakra-ui/button"
-import { parseCookies } from "nookies"
-import { GetServerSideProps } from "next"
-import { Flex, Heading, HStack } from "@chakra-ui/layout"
-import { MdArrowBack, MdArrowForward } from "react-icons/md"
-import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
+import {Tooltip} from "@chakra-ui/tooltip"
+import {useRouter} from "next/router"
+import {IconButton} from "@chakra-ui/button"
+import {parseCookies} from "nookies"
+import {GetServerSideProps} from "next"
+import {Flex, Heading, HStack} from "@chakra-ui/layout"
+import {MdArrowBack, MdArrowForward} from "react-icons/md"
+import {Table, TableCaption, Tbody, Td, Th, Thead, Tr} from "@chakra-ui/table"
 
-import { formatToLocaleDateString } from "../utils/Format"
+import {formatToLocaleDateString} from "../utils/Format"
 
-import { showErrorMessage, ToastComponent } from "../components/Toast"
+import {showErrorMessage, ToastComponent} from "../components/Toast"
 
 import CampaignService from "../services/CampaignService"
 import UserVaccineCampaignService from "../services/UserVaccineCampaignService"
 
-import { Campaign } from "../types/Campaign"
+import {Campaign} from "../types/Campaign"
 
 interface AdesaoProps {
   campaignList: Campaign[],
 }
 
-function Adesao({ campaignList }: AdesaoProps) {
+function Adesao({campaignList}: AdesaoProps) {
   const router = useRouter()
 
   const [allCampaignList,] = useState<Campaign[]>(campaignList)
@@ -32,14 +32,17 @@ function Adesao({ campaignList }: AdesaoProps) {
   const service = new UserVaccineCampaignService()
 
   const handleAccession = async (idVaccine: number) => {
-    const { 'nextauth.token': token } = parseCookies()
+    const {'nextauth.token': token} = parseCookies()
 
     if (campaignSelected && token) {
       let [, id] = token.split(".")
 
-      await service.campaignAccession(campaignSelected.id, { idUser: parseInt(id), idVaccine })
+      await service.campaignAccession(campaignSelected.id, {idUser: parseInt(id), idVaccine})
         .then(() => router.push('/consulta'))
-        .catch(err => { console.log(err); showErrorMessage(err.response.data.description) })
+        .catch(err => {
+          console.log(err);
+          showErrorMessage(err.response.data.description)
+        })
     }
   }
 
@@ -52,6 +55,7 @@ function Adesao({ campaignList }: AdesaoProps) {
         w="100%"
         maxW="1160"
         mx="auto"
+        px="8"
         direction="column"
       >
         {
@@ -64,106 +68,110 @@ function Adesao({ campaignList }: AdesaoProps) {
                 >
                   <IconButton
                     aria-label="Trocar campanha"
-                    icon={<MdArrowBack />}
+                    icon={<MdArrowBack/>}
                     onClick={() => setCampaignSelected(undefined)}
                   />
                 </Tooltip>
                 <Heading>Selecionar Vacina</Heading>
               </HStack>
-              <Table mt={12}>
-                {
-                  campaignSelected.vaccineList.length == 0 &&
-                  <TableCaption>
-                    Nenhuma vacina para aderir
-                  </TableCaption>
-                }
-                <Thead>
-                  <Tr bg="lightgray">
-                    <Th>Nome da Vacina</Th>
-                    <Th>Descrição da Vacina</Th>
-                    <Th>Aderir</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
+              <Flex overflowX="scroll">
+                <Table mt={12}>
                   {
-                    campaignSelected.vaccineList.map(vaccine => (
-                      <Tr key={vaccine.id}>
-                        <Td>{vaccine.name}</Td>
-                        <Td>{vaccine.description}</Td>
-                        <Td>
-                          <Tooltip
-                            label="Selecionar vacina"
-                            aria-label="Clicando neste botão você poderá selecionar a vacina para aderir a campanha"
-                          >
-                            <IconButton
-                              aria-label="Selecionar vacina"
-                              icon={<MdArrowForward />}
-                              onClick={() => handleAccession(vaccine.id)}
-                            />
-                          </Tooltip>
-                        </Td>
-                      </Tr>
-                    ))
+                    campaignSelected.vaccineList.length == 0 &&
+                      <TableCaption>
+                          Nenhuma vacina para aderir
+                      </TableCaption>
                   }
-                </Tbody>
-              </Table>
-            </>
-            :
-            <>
-              <Heading mt="12">Adesão a Campanha</Heading>
-              <Table mt={12}>
-                {
-                  allCampaignList
-                    .filter(campaign => campaign.status === "ACCESSION")
-                    .length == 0 &&
-                  <TableCaption>Nenhuma campanha para aderir</TableCaption>
-                }
-                <Thead>
-                  <Tr bg="lightgray">
-                    <Th>Nome da Campanha</Th>
-                    <Th>Data</Th>
-                    <Th>Vacina</Th>
-                    <Th>Aderir</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {
-                    allCampaignList
-                      .filter(campaign => campaign.status === "ACCESSION")
-                      .map(campaign => (
-                        <Tr key={campaign.id}>
-                          <Td>{campaign.name}</Td>
-                          <Td>
-                            {`${formatToLocaleDateString(campaign.dateBegin)} - ${formatToLocaleDateString(campaign.dateEnd)}`}
-                          </Td>
-                          <Td>{campaign.vaccineList?.map(vaccine => vaccine.name).join(" | ")}</Td>
+                  <Thead>
+                    <Tr bg="lightgray">
+                      <Th>Nome da Vacina</Th>
+                      <Th>Descrição da Vacina</Th>
+                      <Th>Aderir</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {
+                      campaignSelected.vaccineList.map(vaccine => (
+                        <Tr key={vaccine.id}>
+                          <Td>{vaccine.name}</Td>
+                          <Td>{vaccine.description}</Td>
                           <Td>
                             <Tooltip
-                              label="Aderir a campanha"
-                              aria-label="Clicando neste botão você poderá aderir a campanha"
+                              label="Selecionar vacina"
+                              aria-label="Clicando neste botão você poderá selecionar a vacina para aderir a campanha"
                             >
                               <IconButton
-                                aria-label="Aderir a campanha"
-                                icon={<MdArrowForward />}
-                                onClick={() => setCampaignSelected(campaign)}
+                                aria-label="Selecionar vacina"
+                                icon={<MdArrowForward/>}
+                                onClick={() => handleAccession(vaccine.id)}
                               />
                             </Tooltip>
                           </Td>
                         </Tr>
                       ))
+                    }
+                  </Tbody>
+                </Table>
+              </Flex>
+            </>
+            :
+            <>
+              <Heading mt="12">Adesão a Campanha</Heading>
+              <Flex overflowX="scroll">
+                <Table mt={12}>
+                  {
+                    allCampaignList
+                      .filter(campaign => campaign.status === "ACCESSION")
+                      .length == 0 &&
+                      <TableCaption>Nenhuma campanha para aderir</TableCaption>
                   }
-                </Tbody>
-              </Table>
+                  <Thead>
+                    <Tr bg="lightgray">
+                      <Th>Nome da Campanha</Th>
+                      <Th>Data</Th>
+                      <Th>Vacina</Th>
+                      <Th>Aderir</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {
+                      allCampaignList
+                        .filter(campaign => campaign.status === "ACCESSION")
+                        .map(campaign => (
+                          <Tr key={campaign.id}>
+                            <Td>{campaign.name}</Td>
+                            <Td>
+                              {`${formatToLocaleDateString(campaign.dateBegin)} - ${formatToLocaleDateString(campaign.dateEnd)}`}
+                            </Td>
+                            <Td>{campaign.vaccineList?.map(vaccine => vaccine.name).join(" | ")}</Td>
+                            <Td>
+                              <Tooltip
+                                label="Aderir a campanha"
+                                aria-label="Clicando neste botão você poderá aderir a campanha"
+                              >
+                                <IconButton
+                                  aria-label="Aderir a campanha"
+                                  icon={<MdArrowForward/>}
+                                  onClick={() => setCampaignSelected(campaign)}
+                                />
+                              </Tooltip>
+                            </Td>
+                          </Tr>
+                        ))
+                    }
+                  </Tbody>
+                </Table>
+              </Flex>
             </>
         }
-        <ToastComponent />
+        <ToastComponent/>
       </Flex>
     </>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { 'nextauth.token': token } = parseCookies(context)
+  const {'nextauth.token': token} = parseCookies(context)
 
   if (!token) {
     return {
@@ -194,7 +202,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     .catch(err => console.log("[Erro]: " + err))
 
   return {
-    props: { campaignList }
+    props: {campaignList}
   }
 }
 

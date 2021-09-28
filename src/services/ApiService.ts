@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { parseCookies } from "nookies";
 
 const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8081/"
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/"
 })
 
 class ApiService {

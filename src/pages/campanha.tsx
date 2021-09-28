@@ -1,15 +1,15 @@
-import React, { useRef, useState } from "react"
+import React, {useRef, useState} from "react"
 
 import * as yup from "yup"
 import Select from "react-select"
-import DatePicker, { registerLocale } from "react-datepicker";
+import DatePicker, {registerLocale} from "react-datepicker";
 import Head from "next/head"
-import { ptBR } from "date-fns/locale";
-import { yupResolver } from '@hookform/resolvers/yup'
-import { parseCookies } from "nookies";
-import { GetServerSideProps } from "next"
-import { Controller, SubmitHandler, useForm } from "react-hook-form"
-import { MdArrowBack, MdArrowForward, MdChevronRight, MdDelete, MdModeEdit } from "react-icons/md"
+import {ptBR} from "date-fns/locale";
+import {yupResolver} from '@hookform/resolvers/yup'
+import {parseCookies} from "nookies";
+import {GetServerSideProps} from "next"
+import {Controller, SubmitHandler, useForm} from "react-hook-form"
+import {MdArrowBack, MdArrowForward, MdChevronRight, MdDelete, MdModeEdit} from "react-icons/md"
 import {
   AlertDialog,
   AlertDialogBody,
@@ -48,15 +48,20 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 
-import { showErrorMessage, showSuccessMessage, ToastComponent } from "../components/Toast"
+import {showErrorMessage, showSuccessMessage, ToastComponent} from "../components/Toast"
 
-import { formatToLocaleDateString, formatDateToString, formatStatusToPortuguese, formatStringToDate } from "../utils/Format";
+import {
+  formatToLocaleDateString,
+  formatDateToString,
+  formatStatusToPortuguese,
+  formatStringToDate
+} from "../utils/Format";
 
 import CampaignService from "../services/CampaignService"
 import VaccineService from "../services/VaccineService"
 
-import { Campaign, CampaignData } from "../types/Campaign"
-import { Vaccine } from "../types/Vaccine"
+import {Campaign, CampaignData} from "../types/Campaign"
+import {Vaccine} from "../types/Vaccine"
 
 interface CampanhaProps {
   campaignList: Campaign[],
@@ -65,8 +70,8 @@ interface CampanhaProps {
 
 registerLocale("ptBR", ptBR);
 
-function Campanha({ campaignList, vaccineList }: CampanhaProps) {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+function Campanha({campaignList, vaccineList}: CampanhaProps) {
+  const {isOpen, onOpen, onClose} = useDisclosure()
 
   const cancelRef = useRef(null)
 
@@ -99,7 +104,7 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
 
   const {
     control,
-    formState: { errors },
+    formState: {errors},
     handleSubmit,
     register,
     reset,
@@ -114,7 +119,7 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
   })
 
   const options = allVaccineList.map(vaccine => {
-    return { value: vaccine.id, label: vaccine.name }
+    return {value: vaccine.id, label: vaccine.name}
   })
 
   const handleRefresh = async () => {
@@ -210,8 +215,7 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
           showSuccessMessage("Campanha editada com sucesso")
         })
         .catch(err => showErrorMessage(err.response.data.description))
-    }
-    else {
+    } else {
       await service.createCampaign(campaign)
         .then(() => {
           reset()
@@ -230,7 +234,8 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
         {...props}
         ref={ref}
         isReadOnly={true}
-        onChange={() => { }}
+        onChange={() => {
+        }}
       />
     )
   )
@@ -244,11 +249,17 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
         w="100%"
         maxW="1160"
         mx="auto"
+        px="8"
         direction="column"
       >
         {
           campaignSelected ?
-            <>
+            <Flex
+              w="100%"
+              maxW={[360, 360, 480]}
+              mx="auto"
+              direction="column"
+            >
               <HStack mt="12" spacing={6}>
                 <Tooltip
                   label="Trocar campanha"
@@ -256,13 +267,12 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                 >
                   <IconButton
                     aria-label="Trocar campanha"
-                    icon={<MdArrowBack />}
+                    icon={<MdArrowBack/>}
                     onClick={() => setCampaignSelected(undefined)}
                   />
                 </Tooltip>
                 <Heading mt="12">Informações da Campanha</Heading>
               </HStack>
-
               <Box mt={12}>
                 <FormControl
                   isReadOnly
@@ -271,7 +281,8 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                   <Input
                     placeholder="Nome da campanha"
                     value={campaignSelected.name}
-                    onChange={() => { }}
+                    onChange={() => {
+                    }}
                   />
                 </FormControl>
                 <FormControl
@@ -281,12 +292,13 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                   <FormLabel>Data de Início da Campanha</FormLabel>
                   <DatePicker
                     selected={formatStringToDate(campaignSelected.dateBegin)}
-                    onChange={() => { }}
+                    onChange={() => {
+                    }}
                     locale="ptBR"
                     dateFormat="dd/MM/yyyy"
                     wrapperClassName="datePicker"
                     placeholderText="Data de Início da Campanha"
-                    customInput={<DatePickerInput />}
+                    customInput={<DatePickerInput/>}
                   />
                 </FormControl>
                 <FormControl
@@ -296,12 +308,13 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                   <FormLabel>Data de Fim da Campanha</FormLabel>
                   <DatePicker
                     selected={formatStringToDate(campaignSelected.dateEnd)}
-                    onChange={() => { }}
+                    onChange={() => {
+                    }}
                     locale="ptBR"
                     dateFormat="dd/MM/yyyy"
                     wrapperClassName="datePicker"
                     placeholderText="Data de Fim da Campanha"
-                    customInput={<DatePickerInput />}
+                    customInput={<DatePickerInput/>}
                   />
                 </FormControl>
                 <FormControl
@@ -311,7 +324,8 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                   <FormLabel>Estado da Campanha</FormLabel>
                   <ChakraSelect
                     value={campaignSelected.status}
-                    onChange={() => { }}
+                    onChange={() => {
+                    }}
                   >
                     <option value="SIGN_UP">Cadastrada</option>
                     <option value="ACCESSION">Em adesão</option>
@@ -326,7 +340,8 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                   <FormLabel>Lista de Vacinas</FormLabel>
                   <ChakraSelect
                     value={campaignSelected.vaccineList[0].id}
-                    onChange={() => { }}
+                    onChange={() => {
+                    }}
                   >
                     {
                       campaignSelected.vaccineList.map(
@@ -349,9 +364,10 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                   <FormLabel>Número de Vacinas</FormLabel>
                   <NumberInput
                     value={campaignSelected.numberVaccines}
-                    onChange={() => { }}
+                    onChange={() => {
+                    }}
                   >
-                    <NumberInputField />
+                    <NumberInputField/>
                   </NumberInput>
                 </FormControl>
                 <FormControl
@@ -361,265 +377,277 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
                   <FormLabel>Número de Aderidos</FormLabel>
                   <NumberInput
                     value={campaignSelected.adhered}
-                    onChange={() => { }}
+                    onChange={() => {
+                    }}
                   >
-                    <NumberInputField />
+                    <NumberInputField/>
                   </NumberInput>
                 </FormControl>
               </Box>
-            </>
+            </Flex>
             :
             <>
-              <Heading mt="12">Cadastrar Campanha</Heading>
-              <Box mt={12}>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <FormControl
-                    isRequired
-                    id="name"
-                    isInvalid={!!errors && !!errors["name"]}
-                  >
-                    <FormLabel>Nome da Campanha</FormLabel>
-                    <Input
-                      placeholder="Nome da campanha"
-                      {...register("name")}
-                    />
-                    <FormErrorMessage>
-                      {errors.name?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    mt={4}
-                    isRequired
-                    id="dateBegin"
-                    isInvalid={!!errors && !!errors["dateBegin"]}
-                  >
-                    <FormLabel>Data de Início da Campanha</FormLabel>
-                    <Controller
-                      name="dateBegin"
-                      control={control}
-                      defaultValue={null}
-                      render={({
-                        field: { name, value, onChange, ref }
-                      }) => (
-                        <DatePicker
-                          name={name}
-                          selected={value}
-                          onChange={date => onChange(date)}
-                          ref={ref}
-                          locale="ptBR"
-                          dateFormat="dd/MM/yyyy"
-                          wrapperClassName="datePicker"
-                          placeholderText="Data de Início da Campanha"
-                          customInput={<DatePickerInput />}
-                        />
-                      )}
-                    />
-                    <FormErrorMessage>
-                      {errors.dateBegin?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    mt={4}
-                    isRequired
-                    id="dateEnd"
-                    isInvalid={!!errors && !!errors["dateEnd"]}
-                  >
-                    <FormLabel>Data de Fim da Campanha</FormLabel>
-                    <Controller
-                      name="dateEnd"
-                      control={control}
-                      defaultValue={null}
-                      render={({
-                        field: { name, value, onChange, ref }
-                      }) => (
-                        <DatePicker
-                          name={name}
-                          selected={value}
-                          onChange={date => onChange(date)}
-                          ref={ref}
-                          locale="ptBR"
-                          dateFormat="dd/MM/yyyy"
-                          wrapperClassName="datePicker"
-                          placeholderText="Data de Fim da Campanha"
-                          customInput={<DatePickerInput />}
-                        />
-                      )}
-                    />
-                    <FormErrorMessage>
-                      {errors.dateEnd?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    mt={4}
-                    isRequired
-                    id="status"
-                  >
-                    <FormLabel>Estado da Campanha</FormLabel>
-                    <ChakraSelect
-                      isDisabled
-                      value={watch("status")}
+              <Flex
+                w="100%"
+                maxW={[360, 360, 480]}
+                mx="auto"
+                direction="column"
+              >
+                <Heading mt="12">Cadastrar Campanha</Heading>
+                <Box mt={12}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <FormControl
+                      isRequired
+                      id="name"
+                      isInvalid={!!errors && !!errors["name"]}
                     >
-                      <option value="SIGN_UP">Cadastrada</option>
-                      <option value="ACCESSION">Em adesão</option>
-                      <option value="IN_PROGRESS">Em andamento</option>
-                      <option value="CLOSED">Finalizada</option>
-                    </ChakraSelect>
-                  </FormControl>
-                  <FormControl
-                    mt={4}
-                    isRequired
-                    id="vaccineList"
-                    isInvalid={!!errors && !!errors["vaccineList"]}
-                  >
-                    <FormLabel>Lista de Vacinas</FormLabel>
-                    <Select
-                      isMulti
-                      options={options}
-                      value={options.filter(option => {
-                        return watch("vaccineList")?.filter(
-                          vaccine => { return option.value === vaccine.id }
-                        ).length > 0
-                      })}
-                      onChange={handleVaccineList}
-                      instanceId={"select"}
-                      placeholder={"Selecione as vacinas para a campanha"}
-                      noOptionsMessage={() => "Sem opções"}
-                    />
-                    <FormErrorMessage>
-                      {errors.vaccineList && "Obrigatório ao menos uma vacina"}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    mt={4}
-                    isRequired
-                    id="numberVaccines"
-                    isInvalid={!!errors && !!errors["numberVaccines"]}
-                  >
-                    <FormLabel>Número de Vacinas</FormLabel>
-                    <Controller
-                      name="numberVaccines"
-                      control={control}
-                      render={({ field }) => (
-                        <NumberInput {...field} defaultValue={0} min={0}>
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      )}
-                    />
-                    <FormErrorMessage>
-                      {errors.numberVaccines?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <Stack
-                    direction="row-reverse"
-                    spacing={4}
-                    mt={4}
-                  >
-                    <Tooltip
-                      label={`${campaignSelectedToEdit ? "Editar" : "Cadastrar"} campanha`}
-                      aria-label={`Clicando neste botão você irá ${campaignSelectedToEdit ? "editar" : "cadastrar"} a campanha`}
+                      <FormLabel>Nome da Campanha</FormLabel>
+                      <Input
+                        placeholder="Nome da campanha"
+                        {...register("name")}
+                      />
+                      <FormErrorMessage>
+                        {errors.name?.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl
+                      mt={4}
+                      isRequired
+                      id="dateBegin"
+                      isInvalid={!!errors && !!errors["dateBegin"]}
                     >
-                      <Button
-                        type="submit"
-                        isLoading={savingCampaign}
-                        loadingText="Salvando"
+                      <FormLabel>Data de Início da Campanha</FormLabel>
+                      <Controller
+                        name="dateBegin"
+                        control={control}
+                        defaultValue={undefined}
+                        render={({
+                                   field: {name, value, onChange, ref}
+                                 }) => (
+                          <DatePicker
+                            name={name}
+                            selected={value}
+                            onChange={date => onChange(date)}
+                            ref={ref}
+                            locale="ptBR"
+                            dateFormat="dd/MM/yyyy"
+                            wrapperClassName="datePicker"
+                            placeholderText="Data de Início da Campanha"
+                            customInput={<DatePickerInput/>}
+                          />
+                        )}
+                      />
+                      <FormErrorMessage>
+                        {errors.dateBegin?.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl
+                      mt={4}
+                      isRequired
+                      id="dateEnd"
+                      isInvalid={!!errors && !!errors["dateEnd"]}
+                    >
+                      <FormLabel>Data de Fim da Campanha</FormLabel>
+                      <Controller
+                        name="dateEnd"
+                        control={control}
+                        defaultValue={undefined}
+                        render={({
+                                   field: {name, value, onChange, ref}
+                                 }) => (
+                          <DatePicker
+                            name={name}
+                            selected={value}
+                            onChange={date => onChange(date)}
+                            ref={ref}
+                            locale="ptBR"
+                            dateFormat="dd/MM/yyyy"
+                            wrapperClassName="datePicker"
+                            placeholderText="Data de Fim da Campanha"
+                            customInput={<DatePickerInput/>}
+                          />
+                        )}
+                      />
+                      <FormErrorMessage>
+                        {errors.dateEnd?.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl
+                      mt={4}
+                      isRequired
+                      id="status"
+                    >
+                      <FormLabel>Estado da Campanha</FormLabel>
+                      <ChakraSelect
+                        isDisabled
+                        value={watch("status")}
                       >
-                        {campaignSelectedToEdit ? "Editar" : "Cadastrar"}
-                      </Button>
-                    </Tooltip>
-                    <Tooltip
-                      label={`${campaignSelectedToEdit ? "Cancelar edição" : "Limpar campos"}`}
-                      aria-label={`Clicando neste botão você irá ${campaignSelectedToEdit ? "cancelar a edição" : "limpar os campos"} do formulário de campanhas`}
+                        <option value="SIGN_UP">Cadastrada</option>
+                        <option value="ACCESSION">Em adesão</option>
+                        <option value="IN_PROGRESS">Em andamento</option>
+                        <option value="CLOSED">Finalizada</option>
+                      </ChakraSelect>
+                    </FormControl>
+                    <FormControl
+                      mt={4}
+                      isRequired
+                      id="vaccineList"
+                      isInvalid={!!errors && !!errors["vaccineList"]}
                     >
-                      <Button
-                        type="reset"
-                        onClick={() => onReset("edit")}
+                      <FormLabel>Lista de Vacinas</FormLabel>
+                      <Select
+                        isMulti
+                        options={options}
+                        value={options.filter(option => {
+                          return watch("vaccineList")?.filter(
+                            vaccine => {
+                              return option.value === vaccine.id
+                            }
+                          ).length > 0
+                        })}
+                        onChange={handleVaccineList}
+                        instanceId={"select"}
+                        placeholder={"Selecione as vacinas para a campanha"}
+                        noOptionsMessage={() => "Sem opções"}
+                      />
+                      <FormErrorMessage>
+                        {errors.vaccineList && "Obrigatório ao menos uma vacina"}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl
+                      mt={4}
+                      isRequired
+                      id="numberVaccines"
+                      isInvalid={!!errors && !!errors["numberVaccines"]}
+                    >
+                      <FormLabel>Número de Vacinas</FormLabel>
+                      <Controller
+                        name="numberVaccines"
+                        control={control}
+                        render={({field}) => (
+                          <NumberInput {...field} defaultValue={0} min={0}>
+                            <NumberInputField/>
+                            <NumberInputStepper>
+                              <NumberIncrementStepper/>
+                              <NumberDecrementStepper/>
+                            </NumberInputStepper>
+                          </NumberInput>
+                        )}
+                      />
+                      <FormErrorMessage>
+                        {errors.numberVaccines?.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <Stack
+                      direction="row-reverse"
+                      spacing={4}
+                      mt={4}
+                    >
+                      <Tooltip
+                        label={`${campaignSelectedToEdit ? "Editar" : "Cadastrar"} campanha`}
+                        aria-label={`Clicando neste botão você irá ${campaignSelectedToEdit ? "editar" : "cadastrar"} a campanha`}
                       >
-                        {campaignSelectedToEdit ? "Cancelar" : "Limpar"}
-                      </Button>
-                    </Tooltip>
-                  </Stack>
-                </form>
-              </Box>
-              <Table mt={12}>
-                {
-                  allCampaignList.length == 0 &&
-                  <TableCaption>Nenhuma campanha foi cadastrada</TableCaption>
-                }
-                <Thead>
-                  <Tr bg="lightgray">
-                    <Th>Nome da Campanha</Th>
-                    <Th>Data</Th>
-                    <Th>Vacina</Th>
-                    <Th>Estado</Th>
-                    <Th>Ações</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
+                        <Button
+                          type="submit"
+                          isLoading={savingCampaign}
+                          loadingText="Salvando"
+                        >
+                          {campaignSelectedToEdit ? "Editar" : "Cadastrar"}
+                        </Button>
+                      </Tooltip>
+                      <Tooltip
+                        label={`${campaignSelectedToEdit ? "Cancelar edição" : "Limpar campos"}`}
+                        aria-label={`Clicando neste botão você irá ${campaignSelectedToEdit ? "cancelar a edição" : "limpar os campos"} do formulário de campanhas`}
+                      >
+                        <Button
+                          type="reset"
+                          onClick={() => onReset("edit")}
+                        >
+                          {campaignSelectedToEdit ? "Cancelar" : "Limpar"}
+                        </Button>
+                      </Tooltip>
+                    </Stack>
+                  </form>
+                </Box>
+              </Flex>
+              <Flex overflowX="scroll">
+                <Table mt={12}>
                   {
-                    allCampaignList.map(campaign => (
-                      <Tr key={campaign.id}>
-                        <Td>{campaign.name}</Td>
-                        <Td>
-                          {`${formatToLocaleDateString(campaign.dateBegin)} - ${formatToLocaleDateString(campaign.dateEnd)}`}
-                        </Td>
-                        <Td>{campaign.vaccineList?.map(vaccine => vaccine.name).join(" | ")}</Td>
-                        <Td>{formatStatusToPortuguese(campaign.status)}</Td>
-                        <Td>
-                          <HStack spacing={2}>
-                            <Tooltip
-                              label="Próximo estado"
-                              aria-label="Clicando neste botão você poderá dar sequência no estado em que a campanha se encontra"
-                            >
-                              <IconButton
-                                isDisabled={campaign.status === "CLOSED"}
-                                aria-label="Editar informações da campanha"
-                                icon={<MdArrowForward />}
-                                onClick={() => handleStatus(campaign)}
-                              />
-                            </Tooltip>
-                            <Tooltip
-                              label="Editar informações da campanha"
-                              aria-label="Clicando neste botão você poderá editar as informações referentes a campanha cadastrada"
-                            >
-                              <IconButton
-                                isDisabled={campaign.status !== "SIGN_UP"}
-                                aria-label="Editar informações da campanha"
-                                icon={<MdModeEdit />}
-                                onClick={() => handleEdit(campaign)}
-                              />
-                            </Tooltip>
-                            <Tooltip
-                              label="Excluir campanha"
-                              aria-label="Clicando neste botão você poderá excluir a campanha cadastrada"
-                            >
-                              <IconButton
-                                isDisabled={campaign.status !== "SIGN_UP"}
-                                aria-label="Excluir campanha"
-                                icon={<MdDelete />}
-                                onClick={() => handleDelete(campaign)}
-                              />
-                            </Tooltip>
-                            <Tooltip
-                              label="Mais informações"
-                              aria-label="Clicando neste botão você verá as informações referentes a campanha"
-                            >
-                              <IconButton
-                                aria-label="Mais informações"
-                                icon={<MdChevronRight />}
-                                onClick={() => setCampaignSelected(campaign)}
-                              />
-                            </Tooltip>
-                          </HStack>
-                        </Td>
-                      </Tr>
-                    ))
+                    allCampaignList.length == 0 &&
+                      <TableCaption>Nenhuma campanha foi cadastrada</TableCaption>
                   }
-                </Tbody>
-              </Table>
+                  <Thead>
+                    <Tr bg="lightgray">
+                      <Th>Nome da Campanha</Th>
+                      <Th>Data</Th>
+                      <Th>Vacina</Th>
+                      <Th>Estado</Th>
+                      <Th>Ações</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {
+                      allCampaignList.map(campaign => (
+                        <Tr key={campaign.id}>
+                          <Td>{campaign.name}</Td>
+                          <Td>
+                            {`${formatToLocaleDateString(campaign.dateBegin)} - ${formatToLocaleDateString(campaign.dateEnd)}`}
+                          </Td>
+                          <Td>{campaign.vaccineList?.map(vaccine => vaccine.name).join(" | ")}</Td>
+                          <Td>{formatStatusToPortuguese(campaign.status)}</Td>
+                          <Td>
+                            <HStack spacing={2}>
+                              <Tooltip
+                                label="Próximo estado"
+                                aria-label="Clicando neste botão você poderá dar sequência no estado em que a campanha se encontra"
+                              >
+                                <IconButton
+                                  isDisabled={campaign.status === "CLOSED"}
+                                  aria-label="Editar informações da campanha"
+                                  icon={<MdArrowForward/>}
+                                  onClick={() => handleStatus(campaign)}
+                                />
+                              </Tooltip>
+                              <Tooltip
+                                label="Editar informações da campanha"
+                                aria-label="Clicando neste botão você poderá editar as informações referentes a campanha cadastrada"
+                              >
+                                <IconButton
+                                  isDisabled={campaign.status !== "SIGN_UP"}
+                                  aria-label="Editar informações da campanha"
+                                  icon={<MdModeEdit/>}
+                                  onClick={() => handleEdit(campaign)}
+                                />
+                              </Tooltip>
+                              <Tooltip
+                                label="Excluir campanha"
+                                aria-label="Clicando neste botão você poderá excluir a campanha cadastrada"
+                              >
+                                <IconButton
+                                  isDisabled={campaign.status !== "SIGN_UP"}
+                                  aria-label="Excluir campanha"
+                                  icon={<MdDelete/>}
+                                  onClick={() => handleDelete(campaign)}
+                                />
+                              </Tooltip>
+                              <Tooltip
+                                label="Mais informações"
+                                aria-label="Clicando neste botão você verá as informações referentes a campanha"
+                              >
+                                <IconButton
+                                  aria-label="Mais informações"
+                                  icon={<MdChevronRight/>}
+                                  onClick={() => setCampaignSelected(campaign)}
+                                />
+                              </Tooltip>
+                            </HStack>
+                          </Td>
+                        </Tr>
+                      ))
+                    }
+                  </Tbody>
+                </Table>
+              </Flex>
             </>
         }
         <AlertDialog
@@ -629,12 +657,12 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
           motionPreset="slideInBottom"
           leastDestructiveRef={cancelRef}
         >
-          <AlertDialogOverlay />
+          <AlertDialogOverlay/>
           <AlertDialogContent>
             <AlertDialogHeader>
               Excluir ?
             </AlertDialogHeader>
-            <AlertDialogCloseButton />
+            <AlertDialogCloseButton/>
             <AlertDialogBody>
               Tem certeza que gostaria de excluir a campanha ?
             </AlertDialogBody>
@@ -654,14 +682,14 @@ function Campanha({ campaignList, vaccineList }: CampanhaProps) {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        <ToastComponent />
+        <ToastComponent/>
       </Flex>
     </>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { 'nextauth.token': token } = parseCookies(context)
+  const {'nextauth.token': token} = parseCookies(context)
 
   if (!token) {
     return {
@@ -700,7 +728,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     .catch(err => console.log("[Erro]: " + err))
 
   return {
-    props: { campaignList, vaccineList }
+    props: {campaignList, vaccineList}
   }
 }
 

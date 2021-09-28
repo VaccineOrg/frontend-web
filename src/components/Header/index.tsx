@@ -21,7 +21,7 @@ function Header() {
   const { isAdmin, isAuthenticated, signOut } = useContext(AuthContext)
 
   return (
-    <Flex w="100%" maxW="1440" mx="auto" direction="column" bg="lightgray">
+    <Flex w="100%" maxW="1160" mx="auto" direction="column" bg="lightgray">
       <Flex direction="row" align="center" py={4} px={4}>
         <Icon as={MdPolymer} w={12} h={12} />
         <Spacer />
@@ -41,35 +41,35 @@ function Header() {
       </Flex>
       {
         isAuthenticated &&
-        <Grid pl={4} templateColumns="repeat(2, 1fr)">
-          <Flex w="100%">
+        <Grid templateColumns="repeat(2, 1fr)">
+          <Flex w="100%" px="4">
             <NextLink href="/">
               <Heading size="lg">Vacinação</Heading>
             </NextLink>
-            <Spacer />
-            <HStack spacing="6" bg="white" pl={4}>
+          </Flex>
+          <Box w="100%" h="100%" bg="white" px="4" alignSelf="center">
+            <HStack h="100%" spacing="6" bg="white">
               {
                 isAdmin ?
-                  <>
-                    <NextLink href="/vacina">
-                      <Link style={{ textDecoration: "none" }}>Vacina</Link>
-                    </NextLink>
-                    <NextLink href="/campanha">
-                      <Link style={{ textDecoration: "none" }}>Campanha</Link>
-                    </NextLink>
-                  </> :
-                  <>
-                    <NextLink href="/consulta">
-                      <Link style={{ textDecoration: "none" }}>Consulta</Link>
-                    </NextLink>
-                    <NextLink href="/adesao">
-                      <Link style={{ textDecoration: "none" }}>Adesão</Link>
-                    </NextLink>
-                  </>
+                    <>
+                      <NextLink href="/vacina">
+                        <Link style={{ textDecoration: "none" }}>Vacina</Link>
+                      </NextLink>
+                      <NextLink href="/campanha">
+                        <Link style={{ textDecoration: "none" }}>Campanha</Link>
+                      </NextLink>
+                    </> :
+                    <>
+                      <NextLink href="/consulta">
+                        <Link style={{ textDecoration: "none" }}>Consulta</Link>
+                      </NextLink>
+                      <NextLink href="/adesao">
+                        <Link style={{ textDecoration: "none" }}>Adesão</Link>
+                      </NextLink>
+                    </>
               }
             </HStack>
-          </Flex>
-          <Box w="100%" bg="white"></Box>
+          </Box>
         </Grid>
       }
     </Flex>

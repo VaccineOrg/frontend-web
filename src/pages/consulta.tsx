@@ -1,111 +1,114 @@
 import React from "react"
 
 import Head from "next/head"
-import { parseCookies } from "nookies"
-import { GetServerSideProps } from "next"
+import {parseCookies} from "nookies"
+import {GetServerSideProps} from "next"
 import {
-	Flex,
-	Heading,
-	Table,
-	TableCaption,
-	Tbody,
-	Td,
-	Th,
-	Thead,
-	Tr
+  Flex,
+  Heading,
+  Table,
+  TableCaption,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr
 } from "@chakra-ui/react"
 
-import { formatStatusToPortuguese } from "../utils/Format"
+import {formatStatusToPortuguese} from "../utils/Format"
 
-import { ToastComponent } from "../components/Toast"
+import {ToastComponent} from "../components/Toast"
 
 import UserCampaignService from "../services/UserCampaignService"
 
-import { UserCampaign } from "../types/UserCampaign"
+import {UserCampaign} from "../types/UserCampaign"
 
 interface ConsultaProps {
-	userCampaignList: UserCampaign[]
+  userCampaignList: UserCampaign[]
 }
 
-function Consulta({ userCampaignList }: ConsultaProps) {
-	return (
-		<>
-			<Head>
-				<title>Vaccine App - Consulta de Campanhas aderidas</title>
-			</Head>
-			<Flex
-				w="100%"
-				maxW="1160"
-				mx="auto"
-				direction="column"
-			>
-				<Heading mt="12">Consultar Campanhas</Heading>
-				<Table mt={12}>
-					{
-						userCampaignList.length == 0 &&
-						<TableCaption>
-							Você ainda não aderiu a uma campanha
-						</TableCaption>
-					}
-					<Thead>
-						<Tr bg="lightgray">
-							<Th>Nome da Campanha</Th>
-							<Th>Nome da Vacina</Th>
-							<Th>Estado</Th>
-						</Tr>
-					</Thead>
-					<Tbody>
-						{
-							userCampaignList.map((campaign, index) => (
-								<Tr key={index}>
-									<Td>{campaign.campaignName}</Td>
-									<Td>{campaign.vaccineName}</Td>
-									<Td>{formatStatusToPortuguese(campaign.status)}</Td>
-								</Tr>
-							))
-						}
-					</Tbody>
-				</Table>
-				<ToastComponent />
-			</Flex>
-		</>
-	)
+function Consulta({userCampaignList}: ConsultaProps) {
+  return (
+    <>
+      <Head>
+        <title>Vaccine App - Consulta de Campanhas aderidas</title>
+      </Head>
+      <Flex
+        w="100%"
+        maxW="1160"
+        mx="auto"
+        px="8"
+        direction="column"
+      >
+        <Heading mt="12">Consultar Campanhas</Heading>
+        <Flex overflowX="scroll">
+          <Table mt={12}>
+            {
+              userCampaignList.length == 0 &&
+                <TableCaption>
+                    Você ainda não aderiu a uma campanha
+                </TableCaption>
+            }
+            <Thead>
+              <Tr bg="lightgray">
+                <Th>Nome da Campanha</Th>
+                <Th>Nome da Vacina</Th>
+                <Th>Estado</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {
+                userCampaignList.map((campaign, index) => (
+                  <Tr key={index}>
+                    <Td>{campaign.campaignName}</Td>
+                    <Td>{campaign.vaccineName}</Td>
+                    <Td>{formatStatusToPortuguese(campaign.status)}</Td>
+                  </Tr>
+                ))
+              }
+            </Tbody>
+          </Table>
+        </Flex>
+        <ToastComponent/>
+      </Flex>
+    </>
+  )
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-	const { 'nextauth.token': token } = parseCookies(context)
+  const {'nextauth.token': token} = parseCookies(context)
 
-	if (!token) {
-		return {
-			redirect: {
-				destination: "/login",
-				permanent: false,
-			}
-		}
-	}
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      }
+    }
+  }
 
-	const [userProfile, id] = token.split(".")
+  const [userProfile, id] = token.split(".")
 
-	if (userProfile !== "20") {
-		return {
-			redirect: {
-				destination: "/",
-				permanent: false,
-			}
-		}
-	}
+  if (userProfile !== "20") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      }
+    }
+  }
 
-	const service = new UserCampaignService(context)
+  const service = new UserCampaignService(context)
 
-	let userCampaignList: UserCampaign[] = []
+  let userCampaignList: UserCampaign[] = []
 
-	await service.getAllCampaignsByUserId(parseInt(id))
-		.then(response => userCampaignList = response.data.userCampaigns)
-		.catch(err => console.log("[Erro]: " + err))
+  await service.getAllCampaignsByUserId(parseInt(id))
+    .then(response => userCampaignList = response.data.userCampaigns)
+    .catch(err => console.log("[Erro]: " + err))
 
-	return {
-		props: { userCampaignList }
-	}
+  return {
+    props: {userCampaignList}
+  }
 }
 
 export default Consulta

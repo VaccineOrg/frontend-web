@@ -54,8 +54,9 @@ function Login() {
       </Head>
       <Flex
         w="100%"
-        maxW="1160"
+        maxW={[360, 360, 480]}
         mx="auto"
+        px="8"
         direction="column"
       >
         <Heading mt="12">Logar conta</Heading>
